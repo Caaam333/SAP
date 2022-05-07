@@ -10,7 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_07_124617) do
+ActiveRecord::Schema.define(version: 2022_05_07_141015) do
+
+  create_table "adoptions", force: :cascade do |t|
+    t.string "status"
+    t.integer "user_id", null: false
+    t.integer "lost_pet_id", null: false
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["lost_pet_id"], name: "index_adoptions_on_lost_pet_id"
+    t.index ["user_id"], name: "index_adoptions_on_user_id"
+  end
+
+  create_table "breeds", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "lost_pets", force: :cascade do |t|
+    t.string "birthday"
+    t.string "photo_url"
+    t.string "name"
+    t.text "description"
+    t.string "address"
+    t.integer "breed_id", null: false
+    t.integer "species_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["breed_id"], name: "index_lost_pets_on_breed_id"
+    t.index ["species_id"], name: "index_lost_pets_on_species_id"
+  end
+
+  create_table "species", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -20,8 +57,17 @@ ActiveRecord::Schema.define(version: 2022_05_07_124617) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_number"
+    t.boolean "admin"
+    t.string "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "adoptions", "lost_pets"
+  add_foreign_key "adoptions", "users"
+  add_foreign_key "lost_pets", "breeds"
+  add_foreign_key "lost_pets", "species"
 end
